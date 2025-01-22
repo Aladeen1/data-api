@@ -13,9 +13,29 @@ def search_city(query):
     Look for a given city. If multiple options are returned, have the user choose between them.
     Return one city (or None)
     '''
-    url = f"{BASE_URI}/geo/1.0/direct?q={query}"
+    city = {}
+    city_index = 0
+    city_list = []
+    url = f"{BASE_URI}/geo/1.0/direct?q={query}&limit=5"
     response = requests.get(url).json()
-    return response[0]
+    if len(response) < 1:
+        return None
+    for city in response:
+        city_list.append({
+            'name': city['name'],
+            'country': city['country'],
+            'lat': city['lat'],
+            'lon': city['lon']
+        })
+
+    if len(city_list) > 1:
+        for index, value in enumerate(city_list):
+            print(f"{index + 1}. {value['name']},{value['country']}")
+        city_index = input(f"Multiple matches found, which city did you mean?\n> ")
+        city = city_list[int(city_index) - 1]
+    else:
+        city = city_list[city_index]
+    return city
 
 def weather_forecast(lat, lon):
     '''Return a 5-day weather forecast for the city, given its latitude and longitude.'''
