@@ -12,7 +12,9 @@ def search_city(query):
     Look for a given city. If multiple options are returned, have the user choose between them.
     Return one city (or None)
     '''
-    pass  # YOUR CODE HERE
+    url = f"{BASE_URI}/geo/1.0/direct?q={query}"
+    response = requests.get(url).json()
+    return response[0]
 
 def weather_forecast(lat, lon):
     '''Return a 5-day weather forecast for the city, given its latitude and longitude.'''
